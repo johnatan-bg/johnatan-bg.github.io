@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Aplicación</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div id="app">
+        <!-- Barra de navegación -->
+        <nav id="navbar" class="bg-blue-600 text-white p-4 hidden">
+            <div class="container mx-auto flex justify-between items-center">
+                <h1 class="text-2xl font-bold">Mi Aplicación</h1>
+                <div>
+                    <span id="userWelcome" class="mr-4"></span>
+                    <a href="#" class="hover:underline" onclick="logout()">Cerrar Sesión</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Contenedor principal -->
+        <main class="container mx-auto mt-8 p-4">
+            <!-- Formulario de Autenticación -->
+            <div id="authForm" class="bg-white p-8 rounded-lg shadow-md w-full max-w-md mx-auto">
+                <h2 id="formTitle" class="text-2xl font-bold mb-6 text-center text-gray-800">Iniciar Sesión</h2>
+                <form>
+                    <div id="nameField" class="mb-4 hidden">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="name">Nombre completo</label>
+                        <input class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="name" type="text" placeholder="Nombre completo">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="email">Correo electrónico</label>
+                        <input class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="email" type="email" placeholder="Correo electrónico">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="password">Contraseña</label>
+                        <div class="relative">
+                            <input class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="password" type="password" placeholder="******************">
+                            <button type="button" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-gray-600 hover:text-gray-900" onclick="togglePasswordVisibility()">Mostrar</button>
+                        </div>
+                    </div>
+                    <div id="termsField" class="mb-6 hidden">
+                        <label class="flex items-center">
+                            <input type="checkbox" class="mr-2">
+                            <span class="text-sm text-gray-700">Acepto los términos y condiciones</span>
+                        </label>
+                    </div>
+                    <div class="flex flex-col space-y-4">
+                        <button id="submitButton" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" onclick="submitForm()">Iniciar Sesión</button>
+                        <a id="toggleLink" class="text-center text-sm text-blue-500 hover:text-blue-700" href="#" onclick="toggleForm()">¿No tienes cuenta? Regístrate</a>
+                    </div>
+                </form>
+                <div id="conclusion" class="mt-4 p-3 bg-green-100 text-green-700 rounded-md hidden"></div>
+            </div>
+
+            <!-- Gestión de Servicio -->
+            <div id="serviceManagement" class="hidden">
+                <h2 class="text-3xl font-bold mb-6">Gestión de Servicio</h2>
+                <div class="bg-white shadow-md rounded-lg p-6 mb-6">
+                    <h3 class="text-xl font-semibold mb-4">Servicios Activos</h3>
+                    <ul class="space-y-2">
+                        <li class="flex justify-between items-center">
+                            <span>Servicio Premium</span>
+                            <button class="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded">Cancelar</button>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <span>Almacenamiento Extra</span>
+                            <button class="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded">Cancelar</button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="bg-white shadow-md rounded-lg p-6">
+                    <h3 class="text-xl font-semibold mb-4">Servicios Disponibles</h3>
+                    <ul class="space-y-4">
+                        <li class="flex justify-between items-center">
+                            <div>
+                                <span class="font-medium">Servicio Básico</span>
+                                <p class="text-sm text-gray-600">Acceso a funciones estándar</p>
+                            </div>
+                            <button class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded">Activar</button>
+                        </li>
+                        <li class="flex justify-between items-center">
+                            <div>
+                                <span class="font-medium">Servicio Avanzado</span>
+                                <p class="text-sm text-gray-600">Funciones premium y soporte prioritario</p>
+                            </div>
+                            <button class="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded">Activar</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Perfil de Usuario -->
+            <div id="userProfile" class="hidden">
+                <h2 class="text-3xl font-bold mb-6">Perfil de Usuario</h2>
+                <div class="bg-white shadow-md rounded-lg p-6">
+                    <div class="flex items-center mb-6">
+                        <img src="https://via.placeholder.com/100" alt="Foto de perfil" class="rounded-full mr-4">
+                        <div>
+                            <h3 id="profileName" class="text-2xl font-semibold">Nombre del Usuario</h3>
+                            <p id="profileEmail" class="text-gray-600">usuario@email.com</p>
+                        </div>
+                    </div>
+                    <form>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="profileNameInput">Nombre completo</label>
+                            <input class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="profileNameInput" type="text">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="profileEmailInput">Correo electrónico</label>
+                            <input class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="profileEmailInput" type="email">
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="profilePasswordInput">Nueva contraseña</label>
+                            <input class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" id="profilePasswordInput" type="password" placeholder="Dejar en blanco para no cambiar">
+                        </div>
+                        <div class="flex justify-end">
+                            <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button" onclick="updateProfile()">Guardar Cambios</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let isLoginForm = true;
+        let currentUser = null;
+
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            const toggleButton = passwordInput.nextElementSibling;
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleButton.textContent = 'Ocultar';
+            } else {
+                passwordInput.type = 'password';
+                toggleButton.textContent = 'Mostrar';
+            }
+        }
+
+        function toggleForm() {
+            isLoginForm = !isLoginForm;
+            const formTitle = document.getElementById('formTitle');
+            const submitButton = document.getElementById('submitButton');
+            const toggleLink = document.getElementById('toggleLink');
+            const nameField = document.getElementById('nameField');
+            const termsField = document.getElementById('termsField');
+            const conclusion = document.getElementById('conclusion');
+            
+            if (isLoginForm) {
+                formTitle.textContent = 'Iniciar Sesión';
+                submitButton.textContent = 'Iniciar Sesión';
+                toggleLink.textContent = '¿No tienes cuenta? Regístrate';
+                nameField.classList.add('hidden');
+                termsField.classList.add('hidden');
+            } else {
+                formTitle.textContent = 'Registrarse';
+                submitButton.textContent = 'Registrarse';
+                toggleLink.textContent = '¿Ya tienes cuenta? Inicia sesión';
+                nameField.classList.remove('hidden');
+                termsField.classList.remove('hidden');
+            }
+            conclusion.classList.add('hidden');
+        }
+
+        function submitForm() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const conclusion = document.getElementById('conclusion');
+            let message = '';
+
+            if (isLoginForm) {
+                message = `Inicio de sesión exitoso para ${email}. Bienvenido de vuelta a nuestra plataforma.`;
+                currentUser = { email: email, name: 'Usuario' };
+                showLoggedInView();
+            } else {
+                const name = document.getElementById('name').value;
+                const termsAccepted = document.querySelector('#termsField input[type="checkbox"]').checked;
+                if (!termsAccepted) {
+                    alert('Debes aceptar los términos y condiciones para registrarte.');
+                    return;
+                }
+                message = `Registro exitoso para ${name} (${email}). Tu cuenta ha sido creada.`;
+                currentUser = { email: email, name: name };
+                showLoggedInView();
+            }
+
+            conclusion.textContent = message;
+            conclusion.classList.remove('hidden');
+        }
+
+        function showLoggedInView() {
+            document.getElementById('authForm').classList.add('hidden');
+            document.getElementById('navbar').classList.remove('hidden');
+            document.getElementById('serviceManagement').classList.remove('hidden');
+            document.getElementById('userWelcome').textContent = `Bienvenido, ${currentUser.name}`;
+            updateProfileView();
+        }
+
+        function updateProfileView() {
+            document.getElementById('profileName').textContent = currentUser.name;
+            document.getElementById('profileEmail').textContent = currentUser.email;
+            document.getElementById('profileNameInput').value = currentUser.name;
+            document.getElementById('profileEmailInput').value = currentUser.email;
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('authForm').classList.remove('hidden');
+            document.getElementById('navbar').classList.add('hidden');
+            document.getElementById('serviceManagement').classList.add('hidden');
+            document.getElementById('userProfile').classList.add('hidden');
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('conclusion').classList.add('hidden');
+        }
+
+        function updateProfile() {
+            const newName = document.getElementById('profileNameInput').value;
+            const newEmail = document.getElementById('profileEmailInput').value;
+            currentUser.name = newName;
+            currentUser.email = newEmail;
+            updateProfileView();
+            document.getElementById('userWelcome').textContent = `Bienvenido, ${currentUser.name}`;
+            alert('Perfil actualizado con éxito');
+        }
+
+        // Funciones para navegar entre vistas
+        function showServiceManagement() {
+            document.getElementById('serviceManagement').classList.remove('hidden');
+            document.getElementById('userProfile').classList.add('hidden');
+        }
+
+        function showUserProfile() {
+            document.getElementById('serviceManagement').classList.add('hidden');
+            document.getElementById('userProfile').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
